@@ -1,12 +1,24 @@
 import Foundation
 
-public final class ImageFilter {
+public final class ImageProcessor {
     private var rgb: RGBAImage
+    public let desaturateHalf = "desaturateWithIntensive50%"
+    public let desaturateQuarter = "desaturateWithIntensive25%"
+
     public init(rgb: RGBAImage) {
         self.rgb = rgb
     }
     
-    public func desaturate(intensive: Double) -> ImageFilter {
+    public func applyPredifined(name: String) -> ImageProcessor {
+        if(name == desaturateHalf) {
+            desaturate(0.50)
+        } else if(name == desaturateQuarter) {
+            desaturate(0.25)
+        }
+        return self
+    }
+    
+    public func desaturate(intensive: Double) -> ImageProcessor {
         assert(intensive >= 0.0 && intensive <= 1.0, "parameter must be a value from 0.0 to 1.0")
         var newImage  = rgb.pixels
         for y in 0..<rgb.height {
@@ -24,7 +36,7 @@ public final class ImageFilter {
         return self
     }
     
-    public func reverse() -> ImageFilter {
+    public func reverse() -> ImageProcessor {
         var newImage  = rgb.pixels
         for y in 0..<rgb.height {
             for x in 0..<rgb.width {
@@ -40,7 +52,7 @@ public final class ImageFilter {
         return self
     }
 
-    public func tweakColor(red red: Double, green: Double, blue: Double) -> ImageFilter {
+    public func tweakColor(red red: Double, green: Double, blue: Double) -> ImageProcessor {
         assert(red >= 0.0 && red <= 1.0, "red parameter must be a value from 0.0 to 1.0")
         assert(green >= 0.0 && green <= 1.0, "green parameter must be a value from 0.0 to 1.0")
         assert(blue >= 0.0 && blue <= 1.0, "blue parameter must be a value from 0.0 to 1.0")
@@ -60,7 +72,7 @@ public final class ImageFilter {
         return self
     }
     
-    public func blur(let intensive: Double) -> ImageFilter {
+    public func blur(let intensive: Double) -> ImageProcessor {
         assert(intensive >= 0.0 && intensive <= 1.0, "intensive parameter must be a value from 0.0 to 1.0")
         var newImage  = rgb.pixels
         for y in 0..<rgb.height {
